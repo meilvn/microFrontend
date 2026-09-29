@@ -12,9 +12,10 @@ module.exports = (webpackConfigEnv, argv) => {
 
   const config = merge(defaultConfig, {
     // externals: ["react", "react-dom", "single-spa"],
-    externals: ['single-spa']
     // modify the webpack config however you'd like to by adding to this object
   });
+
+  config.externals = ['single-spa'];
 
   // 1. 在 config.plugins 数组中查找特定插件的索引
   const publicPathPluginIndex = config.plugins.findIndex(
