@@ -1,0 +1,24 @@
+{
+  "presets": [
+    "@babel/preset-env",
+    "@babel/preset-typescript"
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-transform-runtime",   // 将内联的辅助函数替换为对 @babel/runtime 模块的导入引用，减小包的体积
+      {
+        "useESModules": true,   // 使用 ESM
+        "regenerator": false   // 不使用 regenerator, 面向现代浏览器
+      }
+    ]
+  ],
+  "env": {
+    "test": {
+      "presets": [
+        ["@babel/preset-env", {
+          "targets": "current node"
+        }]
+      ]
+    }
+  }
+}
