@@ -1,0 +1,105 @@
+/*
+ * components.css —— 动画类 / 卡片 / 按钮等通用组件样式
+ *
+ * 演示点：
+ *  1) @keyframes 关键帧动画
+ *  2) Transition / TransitionGroup 需要的 enter/leave 类
+ *  3) 通用工具类（与 Tailwind utility 并存，演示两者优先级）
+ */
+
+/* ────────────────────────────── 关键帧 ────────────────────────────── */
+
+@keyframes vr-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes vr-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes vr-pulse-dot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(79, 124, 255, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(79, 124, 255, 0);
+  }
+}
+
+@keyframes vr-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ────────────────────────────── 通用动画类 ────────────────────────────── */
+
+.anim-fade-in-up {
+  animation: vr-fade-in-up var(--vr-anim-normal) ease-out both;
+}
+
+.anim-fade-in {
+  animation: vr-fade-in var(--vr-anim-normal) ease-out both;
+}
+
+.anim-pulse-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--vr-primary);
+  animation: vr-pulse-dot 1.6s ease-out infinite;
+}
+
+.anim-spin {
+  animation: vr-spin 0.9s linear infinite;
+}
+
+/* ────────────────────────────── 路由切换过渡 ────────────────────────────── */
+
+/* <router-view> + <transition> 使用的类名 */
+.page-enter-active {
+  animation: vr-fade-in-up 0.28s ease-out both;
+}
+.page-leave-active {
+  transition: opacity 0.18s ease;
+  opacity: 0;
+}
+
+/* ────────────────────────────── 主应用通用卡片 ────────────────────────────── */
+
+.vr-card {
+  background: #fff;
+  border: 1px solid var(--vr-border);
+  border-radius: 12px;
+  box-shadow: var(--vr-shadow);
+  padding: 20px 24px;
+}
+
+.vr-card + .vr-card {
+  margin-top: 16px;
+}
+
+.vr-subapp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  background: var(--vr-primary-soft);
+  color: var(--vr-primary);
+}

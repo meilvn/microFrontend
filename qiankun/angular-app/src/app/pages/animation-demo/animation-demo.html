@@ -1,0 +1,81 @@
+<div class="app-page">
+  <div class="app-section">
+    <div class="app-section__title">
+      <mat-icon>animation</mat-icon>
+      动画演示
+    </div>
+    <div class="app-section__desc">
+      覆盖三类动画来源：@angular/animations 组件动画、路由过渡动画（整个应用已启用）、
+      Material 自带动画（弹窗开合 / 按钮 ripple / 进度条）
+    </div>
+
+    <div class="app-tip">
+      <mat-icon>warning</mat-icon>
+      <span>
+        关键边界：路由切换动画在根组件（app.ts 的 routeAnim）中定义，切换页面即可观察。
+        qiankun 下请重点验证：<strong>unmount 时正在播放的动画是否残留</strong>、
+        二次挂载后动画是否还能正常触发（动画 polyfill / zone 时钟问题）。
+      </span>
+    </div>
+  </div>
+
+  <div class="app-grid app-grid--2">
+    <div class="app-section">
+      <div class="app-section__title">
+        <mat-icon>playlist_add</mat-icon>
+        列表增删动画
+      </div>
+      <mat-card class="app-global-card">
+        <div class="anim-actions">
+          <button mat-raised-button color="primary" (click)="addItem()">
+            <mat-icon>add</mat-icon> 新增
+          </button>
+          <button mat-stroked-button (click)="removeItem(items().length - 1)">
+            <mat-icon>remove</mat-icon> 移除最后一项
+          </button>
+        </div>
+        <div class="anim-list app-global-scroll">
+          @for (item of items(); track item) {
+            <div class="anim-item" [@itemAnim] (click)="removeItem($index)">
+              <mat-icon>task_alt</mat-icon>
+              <span>{{ item }}</span>
+              <mat-icon class="anim-item__close">close</mat-icon>
+            </div>
+          } @empty {
+            <p class="app-global-muted">列表已清空，点击「新增」添加。</p>
+          }
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="app-section">
+      <div class="app-section__title">
+        <mat-icon>speed</mat-icon>
+        进度条动画
+      </div>
+      <mat-card class="app-global-card">
+        <p class="app-global-muted">模拟耗时任务的进度推进（setInterval + signal 驱动）。</p>
+        <mat-progress-bar mode="determinate" [value]="progress()"></mat-progress-bar>
+        <div class="progress-row">
+          <span class="app-global-badge" [class.app-global-badge--ok]="progress() >= 100">
+            {{ progress() }}%
+          </span>
+          <button mat-raised-button color="accent" (click)="toggleProgress()">
+            {{ progressRunning ? '停止' : '开始' }}
+          </button>
+        </div>
+        <mat-progress-bar mode="indeterminate" style="margin-top: 16px"></mat-progress-bar>
+        <p class="app-global-muted" style="font-size: 12px">上方为不确定进度条（无限循环动画）。</p>
+      </mat-card>
+
+      <mat-card class="app-global-card" style="margin-top: 16px">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Material 折叠面板（自带展开/收起动画）</mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>展开与收起由 Material 内部动画驱动，可作为"组件自带动画"的对照样本。</p>
+        </mat-expansion-panel>
+      </mat-card>
+    </div>
+  </div>
+</div>

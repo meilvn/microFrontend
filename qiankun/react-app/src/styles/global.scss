@@ -1,0 +1,49 @@
+// ============================================================================
+// 全局样式入口：所有样式均通过 @import 引入（需求点：@import 导入的样式）
+// ============================================================================
+@import './variables.scss';
+@import './mixins.scss';
+@import './animations.scss';
+
+// ----------------------------------------------------------------------------
+// 全局选择器示例（qiankun 边界用例 ★）
+// ----------------------------------------------------------------------------
+// 这里的 body / #root / .ant-* / ::-webkit-scrollbar 都是“全局选择器”，
+// 会作用在【整个页面】上（包括主应用挂载区域）。
+// 接入 qiankun 后请对比观察：
+//  1) 默认（未开样式隔离）：这些样式会泄漏到主应用页面；
+//  2) experimentalStyleIsolation：antd 内部样式被隔离，但写在全局文件里的
+//     样式仍会生效（它只处理运行时注入的样式，不处理 <style> 标签外的全局 css）；
+//  3) strictStyleIsolation（shadow DOM）：这些全局样式对子应用自身 DOM 也
+//     可能失效，且渲染在 body 下的 antd 弹层（Modal/message 等 portal）会丢样式。
+// 本文件刻意保留这些写法，作为你切换隔离策略后的观察样本。
+// ----------------------------------------------------------------------------
+
+body {
+  margin: 0;
+  font-family: $font-family;
+  background-color: $bg-color;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+// 全局覆盖 antd 主按钮圆角：验证全局选择器能命中 antd 组件类名
+.ant-btn-primary {
+  border-radius: 6px;
+}
+
+// 全局自定义滚动条
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}

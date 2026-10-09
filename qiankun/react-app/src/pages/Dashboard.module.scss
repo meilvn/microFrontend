@@ -1,0 +1,139 @@
+@import '../styles/mixins.scss';
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.statsRow {
+  @include fade-in-up();
+}
+
+.statCard {
+  @include card-panel();
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  transition: $transition-base;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.statLabel {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.statValue {
+  margin-top: 4px;
+  font-size: 32px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.statIcon {
+  font-size: 32px;
+}
+
+.barCard {
+  @include card-panel();
+  @include fade-in-up(0.1s);
+  padding: 20px 24px;
+}
+
+.barChart {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  height: 180px;
+  padding-top: 8px;
+}
+
+.barCol {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  height: 100%;
+}
+
+.barValue {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.bar {
+  width: 100%;
+  max-width: 40px;
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, #1677ff, #69b1ff);
+  animation: growBar 0.7s ease both;
+}
+
+.barLabel {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.activityCard {
+  @include card-panel();
+  @include fade-in-up(0.2s);
+  padding: 20px 24px;
+}
+
+.activityItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  animation: slideInLeft 0.4s ease both;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #52c41a;
+  animation: pulse 2s ease infinite;
+}
+
+.activityTitle {
+  font-size: 13px;
+}
+
+.activityTime {
+  margin-left: auto;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.infoCard {
+  @include card-panel();
+  @include fade-in-up(0.3s);
+  padding: 20px 24px;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px dashed #f0f0f0;
+  font-size: 13px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.infoValue {
+  font-variant-numeric: tabular-nums;
+  color: rgba(0, 0, 0, 0.65);
+}

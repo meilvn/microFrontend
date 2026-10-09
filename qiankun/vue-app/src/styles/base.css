@@ -1,0 +1,40 @@
+/*
+ * base.css —— 全局 reset 与 CSS 变量
+ *
+ * qiankun 测试点：
+ * 1. 这里的 `*` 全局选择器会作用于整个页面（包括主应用），
+ *    请观察开启 / 关闭样式隔离时，主应用样式是否被波及。
+ * 2. CSS 变量统一使用 `--va-*` 前缀，用于测试变量名冲突。
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --va-color-primary: #2563eb;
+  --va-color-bg: #f3f5f9;
+  --va-color-card: #ffffff;
+  --va-color-border: #e5e7eb;
+  --va-color-text: #1f2937;
+  --va-color-text-secondary: #6b7280;
+  --va-radius: 8px;
+  --va-shadow: 0 1px 3px rgba(17, 24, 39, 0.08);
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+  background: var(--va-color-bg);
+  color: var(--va-color-text);
+  -webkit-font-smoothing: antialiased;
+}

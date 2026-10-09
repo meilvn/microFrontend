@@ -1,0 +1,87 @@
+<div class="app-page">
+  <div class="app-section">
+    <div class="app-section__title">
+      <mat-icon>dashboard</mat-icon>
+      概览
+    </div>
+    <div class="app-section__desc">
+      后台系统示例首页 · 统计卡片使用全局工具类 .app-global-card（定义于 styles/_global-selectors.scss，经 @import 引入）
+    </div>
+
+    <div class="app-grid app-grid--4">
+      @for (s of stats; track s.label) {
+        <div class="app-global-card stat-card">
+          <div class="stat-card__icon">
+            <mat-icon>{{ s.icon }}</mat-icon>
+          </div>
+          <div class="stat-card__body">
+            <div class="stat-card__value">{{ s.value }}</div>
+            <div class="stat-card__label">{{ s.label }}</div>
+          </div>
+          <span
+            class="app-global-badge"
+            [class.app-global-badge--ok]="s.up"
+            [class.app-global-badge--danger]="!s.up"
+          >{{ s.trend }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="app-grid app-grid--2">
+    <div class="app-section">
+      <div class="app-section__title">
+        <mat-icon>history</mat-icon>
+        最近动态
+      </div>
+      <mat-card class="app-global-card activity-card">
+        <mat-list>
+          @for (a of activities; track a.text) {
+            <mat-list-item>
+              <mat-icon matListItemIcon>{{ a.icon }}</mat-icon>
+              <span matListItemTitle>{{ a.text }}</span>
+              <span matListItemMeta class="app-global-muted">{{ a.time }}</span>
+            </mat-list-item>
+            @if (!$last) {
+              <mat-divider></mat-divider>
+            }
+          }
+        </mat-list>
+      </mat-card>
+    </div>
+
+    <div class="app-section">
+      <div class="app-section__title">
+        <mat-icon>explore</mat-icon>
+        快捷入口
+      </div>
+      <div class="app-global-card quick-links">
+        <p class="app-global-muted">
+          以下入口用于验证本示例的四大特性与边界场景，接入 qiankun 后逐一点击检查。
+        </p>
+        <div class="quick-links__row">
+          <button mat-raised-button color="primary" routerLink="/dialog">
+            <mat-icon>open_in_new</mat-icon> 弹窗
+          </button>
+          <button mat-raised-button color="accent" routerLink="/animation">
+            <mat-icon>animation</mat-icon> 动画
+          </button>
+          <button mat-raised-button routerLink="/global-style">
+            <mat-icon>palette</mat-icon> 全局样式
+          </button>
+          <button mat-stroked-button routerLink="/edge">
+            <mat-icon>science</mat-icon> 边界测试
+          </button>
+        </div>
+      </div>
+
+      <div class="app-tip" style="margin-top: 16px">
+        <mat-icon>info</mat-icon>
+        <span>
+          提示：接入 qiankun 后建议先到「全局样式测试」页观察 body / h1 / a 等
+          全局选择器是否泄漏到宿主页面，再到「弹窗演示」页验证 CDK overlay 的样式表现。
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

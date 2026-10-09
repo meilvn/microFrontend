@@ -1,0 +1,47 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(63, 81, 181, 0.12);
+    color: $brand-primary;
+    @include flex-center;
+
+    mat-icon {
+      width: 24px;
+      height: 24px;
+      font-size: 24px;
+    }
+  }
+
+  &__value {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  &__label {
+    font-size: 13px;
+    color: #78909c;
+  }
+}
+
+.activity-card {
+  padding: 0;
+}
+
+.quick-links {
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+    margin-top: $spacing-md;
+  }
+}

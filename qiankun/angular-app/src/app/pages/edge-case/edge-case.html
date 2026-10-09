@@ -1,0 +1,160 @@
+<div class="app-page">
+  <div class="app-section">
+    <div class="app-section__title">
+      <mat-icon>science</mat-icon>
+      qiankun 边界测试
+    </div>
+    <div class="app-section__desc">
+      一组专门为 qiankun 接入准备的"陷阱"用例：泄漏、污染、资源路径、按需加载
+    </div>
+
+    <div class="app-tip">
+      <mat-icon>info</mat-icon>
+      <span>
+        测试方法：先在子应用里开启下面的开关，然后切换到主应用的其他子应用 / 页面，
+        再切回来 —— 检查定时器是否还在跑、监听是否重复、全局变量是否残留、
+        请求与动态 chunk 是否正常。
+      </span>
+    </div>
+  </div>
+
+  <div class="app-grid app-grid--2">
+    <!-- 定时器 -->
+    <mat-card class="app-global-card leak-card">
+      <div class="leak-card__head">
+        <mat-icon>timer</mat-icon>
+        <h3>定时器（setInterval）</h3>
+      </div>
+      <p class="app-global-muted">
+        每秒跳动一次。若 unmount 未清理，切走后该定时器仍在后台运行（内存泄漏 + 重复执行）。
+      </p>
+      <div class="leak-card__row">
+        <span class="app-global-badge" [class.app-global-badge--ok]="(state$ | async)?.intervalActive">
+          {{ (state$ | async)?.intervalActive ? '运行中' : '已停止' }}
+        </span>
+        <span class="app-global-muted">累计跳动：{{ (state$ | async)?.ticks }} 次</span>
+      </div>
+      <div class="leak-card__actions">
+        <button mat-raised-button color="primary" (click)="edge.toggleInterval()">
+          {{ (state$ | async)?.intervalActive ? '停止定时器' : '开启定时器' }}
+        </button>
+      </div>
+    </mat-card>
+
+    <!-- window 监听 -->
+    <mat-card class="app-global-card leak-card">
+      <div class="leak-card__head">
+        <mat-icon>graphic_eq</mat-icon>
+        <h3>window resize 监听</h3>
+      </div>
+      <p class="app-global-muted">
+        监听 window resize。若 unmount 未移除监听，重复挂载会产生多个监听 → 事件重复触发。
+      </p>
+      <div class="leak-card__row">
+        <span class="app-global-badge" [class.app-global-badge--ok]="(state$ | async)?.resizeActive">
+          {{ (state$ | async)?.resizeActive ? '监听中' : '未监听' }}
+        </span>
+        <span class="app-global-muted">触发次数：{{ (state$ | async)?.resizeCount }}</span>
+      </div>
+      <div class="leak-card__actions">
+        <button mat-raised-button color="primary" (click)="edge.toggleResizeListener()">
+          {{ (state$ | async)?.resizeActive ? '移除监听' : '添加监听' }}
+        </button>
+      </div>
+    </mat-card>
+
+    <!-- 全局变量污染 -->
+    <mat-card class="app-global-card leak-card">
+      <div class="leak-card__head">
+        <mat-icon>language</mat-icon>
+        <h3>window 全局变量污染</h3>
+      </div>
+      <p class="app-global-muted">
+        向 window 写入 <code>__ANGULAR_APP_GLOBAL</code>，模拟子应用污染宿主全局命名空间。
+      </p>
+      <div class="leak-card__row">
+        <span class="app-global-badge" [class.app-global-badge--danger]="(state$ | async)?.hasGlobalVar">
+          {{ (state$ | async)?.hasGlobalVar ? '已写入' : '未写入' }}
+        </span>
+        <code class="app-global-muted">{{ edge.readGlobalVar() | json }}</code>
+      </div>
+      <div class="leak-card__actions">
+        <button mat-raised-button (click)="edge.writeGlobalVar()">写入全局变量</button>
+        <button mat-stroked-button (click)="edge.clearGlobalVar()">清除</button>
+      </div>
+    </mat-card>
+
+    <!-- 相对路径请求 -->
+    <mat-card class="app-global-card leak-card">
+      <div class="leak-card__head">
+        <mat-icon>http</mat-icon>
+        <h3>相对路径 HTTP 请求</h3>
+      </div>
+      <p class="app-global-muted">
+        请求 <code>assets/mock.json</code>（相对路径）。qiankun 下该 URL 会基于宿主页面解析，
+        base href / 资源前缀不对会 404 —— 正好用来验证公共路径配置。
+      </p>
+      <div class="leak-card__actions">
+        <button mat-raised-button color="accent" (click)="runHttpProbe()" [disabled]="httpLoading">
+          {{ httpLoading ? '请求中…' : '发起请求' }}
+        </button>
+      </div>
+      @if (httpProbe) {
+        <div class="probe-result">
+          <div><b>URL：</b>{{ httpProbe.url }}</div>
+          <div>
+            <b>状态：</b>
+            <span class="app-global-badge" [class.app-global-badge--ok]="httpProbe.status === 200"
+              [class.app-global-badge--danger]="httpProbe.status !== 200">
+              {{ httpProbe.status === 200 ? '200 成功' : httpProbe.status + ' 失败' }}
+            </span>
+          </div>
+          <div><b>返回：</b><code>{{ httpProbe.body | json }}</code></div>
+        </div>
+      }
+    </mat-card>
+
+    <!-- 动态 import -->
+    <mat-card class="app-global-card leak-card">
+      <div class="leak-card__head">
+        <mat-icon>rocket_launch</mat-icon>
+        <h3>动态 import（按需 chunk）</h3>
+      </div>
+      <p class="app-global-muted">
+        点击后运行时 import <code>../dynamic/hello</code>，产物中该模块是独立 chunk。
+        二次挂载后仍能加载成功，说明 publicPath / chunk 路径配置正确。
+      </p>
+      <div class="leak-card__actions">
+        <button mat-raised-button color="primary" (click)="runDynamicImport()">动态加载 chunk</button>
+      </div>
+      @if (dynamicResult) {
+        <div class="probe-result">
+          <b>结果：</b>{{ dynamicResult }}
+        </div>
+      }
+    </mat-card>
+
+    <!-- 一键清理 + 集成清单 -->
+    <mat-card class="app-global-card leak-card">
+      <div class="leak-card__head">
+        <mat-icon>cleaning_services</mat-icon>
+        <h3>一键清理 & 集成侧核对清单</h3>
+      </div>
+      <p class="app-global-muted">
+        「一键清理」模拟 unmount 应做的事（清定时器 + 移除监听）。
+        主应用集成时，unmount 里还应：destroy Angular 应用、清空容器、移除全局变量。
+      </p>
+      <div class="leak-card__actions">
+        <button mat-raised-button (click)="edge.cleanupAll()">一键清理</button>
+      </div>
+      <ul class="checklist">
+        <li>☐ unmount 时 destroy ApplicationRef（避免重复挂载叠加）</li>
+        <li>☐ 清理 setInterval / setTimeout / 事件监听（本页两处开关可验证）</li>
+        <li>☐ 移除写入 window 的全局变量（避免污染宿主命名空间）</li>
+        <li>☐ 关闭所有未关闭的弹窗（overlay 残留会挡住宿主页面）</li>
+        <li>☐ 验证懒加载 chunk / 动态 import 二次挂载后仍可加载</li>
+        <li>☐ 验证相对路径请求在宿主 origin 下的解析结果</li>
+      </ul>
+    </mat-card>
+  </div>
+</div>

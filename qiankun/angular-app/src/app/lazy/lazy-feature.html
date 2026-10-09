@@ -1,0 +1,23 @@
+<div class="app-page">
+  <div class="app-section">
+    <div class="app-section__title">
+      <mat-icon>inbox</mat-icon>
+      懒加载模块
+    </div>
+    <div class="app-section__desc">
+      {{ chunkNote }}。qiankun 下重点验证：首次挂载 → 切走 → 再挂载后，该页面是否仍能正常加载。
+    </div>
+
+    <mat-card class="app-global-card lazy-card">
+      <h3>独立 chunk 的页面</h3>
+      <p>
+        这个页面与主 bundle 分离。如果接入后出现"首次能打开、切走再回来白屏 / 404"，
+        优先检查子应用的 <b>publicPath / 资源公共路径</b> 配置（见 README）。
+      </p>
+      <div class="lazy-card__row">
+        <span class="app-global-badge app-global-badge--ok">已作为独立 chunk 打包</span>
+        <span class="app-global-badge">模块加载时间：{{ loadTime }}</span>
+      </div>
+    </mat-card>
+  </div>
+</div>

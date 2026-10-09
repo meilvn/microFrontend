@@ -1,0 +1,49 @@
+@import '../../../styles/variables';
+
+.raw-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  margin-top: $spacing-md;
+
+  button {
+    padding: 6px 14px;
+    border: 1px solid #ccc;
+    border-radius: $radius-sm;
+    background: #fff;
+  }
+
+  input,
+  select {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: $radius-sm;
+  }
+}
+
+.util-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.check-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th,
+  td {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    background: #f5f7ff;
+    color: $brand-primary;
+  }
+}

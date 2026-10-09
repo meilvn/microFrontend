@@ -1,0 +1,5 @@
+{
+  "app": "angular-app",
+  "file": "assets/mock.json",
+  "message": "相对路径请求成功。若在 qiankun 下 404，说明 <base href> 或资源公共路径（publicPath）配置需要调整。"
+}

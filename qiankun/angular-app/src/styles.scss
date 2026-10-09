@@ -1,0 +1,31 @@
+/* ============================================================
+ * angular-app 全局样式 —— 专为 qiankun 接入测试设计
+ *
+ * 本文件集中演示 4 类样式来源（可在 dist 产物 CSS 中逐一验证）：
+ *   1) 构建期 SCSS @import —— 变量 / mixin / 全局选择器片段，
+ *      由 sass 内联，不出现在产物 CSS 中（变量、mixin）。
+ *   2) 构建期 npm 包 @import —— Angular Material 预构建主题 CSS。
+ *   3) 外部 CSS @import url(...) —— Google Fonts / Material Icons。
+ *      注意：esbuild 在构建时会把 http(s) 的 @import url() 拉取并内联为
+ *      @font-face（构建期需要网络）；如需"运行时导入"，应改用
+ *      <link rel="stylesheet"> 或保留相对路径的 @import。
+ *   4) 全局选择器 —— body / h1 / a / ::selection 等元素选择器与
+ *      全局工具类，用于测试 qiankun 的样式隔离（泄漏 / shadow DOM）。
+ *
+ * 注意：CSS 规范要求 @import 必须位于样式表最前面（@charset 除外），
+ * 所以全部 @import 都集中在本文件顶部。
+ * ============================================================ */
+
+// ---- 1) 构建期 @import：SCSS 片段（内联，不进产物）----
+@import './styles/variables';
+@import './styles/mixins';
+@import './styles/global-selectors';
+@import './styles/layout';
+
+// ---- 2) 构建期 @import：npm 包 CSS（Material 预构建主题）----
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+// ---- 3) 外部 @import：Google Fonts（esbuild 构建期内联为 @font-face，需网络）----
+@import url('https://fonts.googleapis.com/css2?family=Material+Icons&family=Roboto:wght@300;400;500;700&display=swap');
+
+// ---- 4) 全局选择器片段见 _global-selectors.scss，此处不再重复 ----

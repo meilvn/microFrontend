@@ -1,0 +1,27 @@
+// 混入（mixins）：通过 @import 引入后使用
+@import './variables.scss';
+@import './animations.scss';
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin card-panel {
+  background: #fff;
+  border-radius: $card-radius;
+  box-shadow: $shadow-card;
+}
+
+@mixin ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// 入场动画：元素 fadeInUp，可指定延迟（用于列表错峰入场）
+@mixin fade-in-up($delay: 0s) {
+  animation: fadeInUp $anim-duration ease both;
+  animation-delay: $delay;
+}

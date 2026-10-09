@@ -1,0 +1,24 @@
+@import '../styles/mixins.scss';
+
+.card {
+  @include fade-in-up();
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+// 表格行入场动画（数据变化时逐行淡入）
+.rowEnter {
+  animation: fadeIn 0.4s ease both;
+}
+
+// 演示 :global —— 给 antd 表格行加过渡效果（仅对该模块逃逸）
+:global(.ant-table-tbody > tr) {
+  transition: background-color 0.2s ease;
+}

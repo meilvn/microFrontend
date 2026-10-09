@@ -1,0 +1,74 @@
+/*
+ * base.css —— 全局基础样式 / 全局选择器 / CSS 变量
+ *
+ * 注意：Tailwind v4 的 preflight 会做一轮 reset；这里的 * 选择器会与 preflight 叠加，
+ * 故意保留它用于观察「主应用全局选择器是否污染子应用」这一 qiankun 测试点。
+ */
+
+:root {
+  /* 主应用主题色变量 */
+  --vr-primary: #4f7cff;
+  --vr-primary-soft: #eaf0ff;
+  --vr-bg: #f5f7fb;
+  --vr-text: #1f2937;
+  --vr-text-muted: #6b7280;
+  --vr-border: #e5e7eb;
+  --vr-shadow: 0 6px 24px rgba(31, 41, 55, 0.08);
+
+  /* 动画时长 */
+  --vr-anim-fast: 0.2s;
+  --vr-anim-normal: 0.35s;
+}
+
+/* 全局 * 选择器（演示用）：在内边距上做统一校准 */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--vr-bg);
+  color: var(--vr-text);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 全局标题 / 链接选择器 */
+h1,
+h2,
+h3 {
+  margin: 0;
+  color: var(--vr-text);
+  font-weight: 600;
+}
+
+a {
+  color: var(--vr-primary);
+  text-decoration: none;
+  transition: opacity var(--vr-anim-fast);
+}
+a:hover {
+  opacity: 0.75;
+}
+
+/* 主应用内的滚动条美化（也是全局选择器演示） */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

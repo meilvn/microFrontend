@@ -1,13 +1,20 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pure-html</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>子应用运维台 · pure-html-admin</title>
+    <!--
+      qiankun 接入注意：
+      1. 本模板不写任何内联 script/style——qiankun 解析 HTML entry 时对内联脚本
+         的处理策略与外部脚本不同，全部走打包产物（html-webpack-plugin 注入）。
+      2. 资源（favicon 等）使用相对路径，配合运行时 __webpack_public_path__ 适配。
+      3. 挂载容器 #app：独立运行时直接使用；被 qiankun 接管时由 mount() 在
+         主应用传入的 container 中重建（见 src/index.ts）。
+    -->
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

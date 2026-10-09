@@ -1,0 +1,24 @@
+/*
+ * ============================================================
+ * main.css —— 样式入口（@import 测试核心）
+ * ============================================================
+ *
+ * @import 两种形态：
+ * 1. 下面的 `@import './legacy-support.css';` 是「真实保留」的 import：
+ *    css-loader 通过 import.filter 放行（见 webpack.config.js），
+ *    它会原样出现在 dist/css/main.xxx.css 中，由浏览器在运行时发起请求——
+ *    用于测试 qiankun 加载子应用样式时对 @import 的处理。
+ * 2. 其余业务 @import（tailwind / base / components / animations）
+ *    由 css-loader 内联合并成单个 CSS，PostCSS 再处理 @tailwind 指令。
+ *
+ * 注意 CSS 规范：@import 必须位于样式表所有规则之前（仅 @charset/@layer 除外）。
+ */
+
+/* --- 真实保留的 @import（qiankun 测试点） --- */
+@import './legacy-support.css';
+
+/* --- 业务 @import 链（构建时内联） --- */
+@import './tailwind.css';
+@import './base.css';
+@import './components.css';
+@import './animations.css';

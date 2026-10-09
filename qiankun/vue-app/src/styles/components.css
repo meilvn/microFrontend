@@ -1,0 +1,156 @@
+/*
+ * components.css —— 仅保留 Tailwind utility 难以表达的自定义样式
+ *（动画关键帧、状态点、日志过渡），其余布局样式已改为 Tailwind class。
+ *
+ * qiankun 测试点：
+ * 1. 动画类用于测试子应用在切换 / 卸载、重新挂载时的动画运行状态与残留。
+ * 2. 自定义类与 Tailwind utility 混用，观察两种来源样式的加载顺序与优先级。
+ */
+
+/* ---------- 页面进入 / 离开动画（路由切换） ---------- */
+.page-enter-active {
+  animation: va-page-in 0.45s ease both;
+}
+
+.page-leave-active {
+  animation: va-page-out 0.25s ease both;
+}
+
+@keyframes va-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes va-page-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* ---------- 状态点（动画） ---------- */
+.va-status {
+  display: inline-flex;
+  align-items: center;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.status-dot--online {
+  background: #16a34a;
+  animation: va-pulse-online 1.8s ease-in-out infinite;
+}
+
+.status-dot--offline {
+  background: #9ca3af;
+}
+
+.status-dot--fault {
+  background: #dc2626;
+  animation: va-pulse-fault 0.9s ease-in-out infinite;
+}
+
+.status-dot--maintenance {
+  background: #f59e0b;
+}
+
+@keyframes va-pulse-online {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(22, 163, 74, 0);
+  }
+}
+
+@keyframes va-pulse-fault {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* ---------- 操作日志（TransitionGroup 动画） ---------- */
+.va-log-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.va-log-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fafbfc;
+  font-size: 13px;
+}
+
+.va-log-item__name {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.va-log-item__time {
+  margin-left: auto;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.log-enter-active {
+  transition: all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+.log-leave-active {
+  transition: all 0.3s ease;
+}
+
+.log-enter-from {
+  opacity: 0;
+  transform: translateX(-24px);
+}
+
+.log-leave-to {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.95);
+}
+
+.log-move {
+  transition: transform 0.4s ease;
+}
+
+/* ---------- 详情备注 ---------- */
+.va-detail-remark {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px dashed #e5e7eb;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #6b7280;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

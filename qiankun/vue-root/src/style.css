@@ -1,0 +1,22 @@
+/*
+ * style.css —— 主应用样式入口
+ *
+ * 需求点：
+ *  1) @import 分层引入样式（Tailwind v4 + base + components）
+ *  2) 全局样式选择器（*、body、h1~h3、a 等）
+ *  3) 动画（@keyframes + 通用动画类）
+ *
+ * Tailwind v4 通过 `@import "tailwindcss"` 引入，不再需要 tailwind.config.js / postcss.config.js，
+ * 自动扫描 src 下的 utility class。
+ */
+
+@import "tailwindcss";
+@import "./styles/base.css";
+@import "./styles/components.css";
+
+/*
+ * 这里再放一段真实存在、保留在产物 CSS 中的 @import 演示，
+ * 路径指到同目录下的 legacy-support.css，方便观察 qiankun / Vite 对 @import 的处理。
+ * （与子应用 pure-html 的 legacy-support.css 是同一类测试点）
+ */
+@import "./styles/legacy-support.css";

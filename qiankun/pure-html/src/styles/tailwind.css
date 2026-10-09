@@ -1,0 +1,6 @@
+/*
+ * Tailwind 指令层（被 main.css 通过 @import 引入，由 css-loader 内联后交给 PostCSS 处理）
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

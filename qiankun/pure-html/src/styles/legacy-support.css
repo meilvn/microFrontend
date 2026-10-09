@@ -1,0 +1,21 @@
+/*
+ * ============================================================
+ * legacy-support.css —— 低版本浏览器回退样式（@import 测试专用）
+ * ============================================================
+ * 本文件不参与 css-loader 的内联，而是以真实 `@import './legacy-support.css';`
+ * 的形式保留在构建产物中（见 webpack.config.js 的 import.filter），
+ * 并独立拷贝到 dist/css/legacy-support.css。
+ *
+ * 测试面板中「黄色虚线框」出现 = 该 @import 被浏览器成功加载。
+ * 在 qiankun 样式隔离（scoped）模式下，这条 @import 的加载行为
+ * 值得重点观察：它可能被隔离规则改写，也可能因网络请求独立发送而乱序。
+ */
+
+.legacy-demo {
+  border: 2px dashed #eab308;
+  background: #fef9c3;
+  color: #713f12;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  border-radius: 6px;
+}

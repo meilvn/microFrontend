@@ -1,0 +1,16 @@
+/*
+ * legacy-support.css —— 故意保留在产物 CSS 中的一条独立文件
+ *
+ * 它通过 style.css 顶部的 `@import "./styles/legacy-support.css"` 引用，
+ * 用来观察 Vite / qiankun 对 @import 的处理（是否被合并、是否被内联）。
+ * 这条样式选择器带 .vr-legacy 前缀，避免污染业务。
+ */
+
+.vr-legacy {
+  font-family: "Courier New", Consolas, monospace;
+  font-size: 12px;
+  color: #94a3b8;
+  border-top: 1px dashed var(--vr-border);
+  padding-top: 8px;
+  margin-top: 16px;
+}

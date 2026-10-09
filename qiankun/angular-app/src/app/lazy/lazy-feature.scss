@@ -1,0 +1,12 @@
+// 模块级 @import：演示组件样式同样可以使用构建期 @import 引用全局变量
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.lazy-card {
+  &__row {
+    display: flex;
+    gap: $spacing-md;
+    flex-wrap: wrap;
+    margin-top: $spacing-sm;
+  }
+}

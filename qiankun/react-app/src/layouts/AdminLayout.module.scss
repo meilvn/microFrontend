@@ -1,0 +1,92 @@
+@import '../styles/mixins.scss';
+
+.root {
+  min-height: 100vh;
+}
+
+.sider {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.logo {
+  @include flex-center();
+  gap: 8px;
+  height: $header-height;
+  color: #fff;
+}
+
+.logoImg {
+  width: 28px;
+  height: 28px;
+}
+
+.logoText {
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: $header-height;
+  padding: 0 16px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.clock {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.2;
+}
+
+.time {
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.date {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.user {
+  cursor: pointer;
+}
+
+.noticeItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 13px;
+}
+
+.noticeTime {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.content {
+  padding: 16px;
+  overflow: auto;
+}
+
+.pageWrap {
+  @include fade-in-up();
+}
+
+// 演示 CSS Modules 中的 :global —— 让 .ant-layout-header 的默认样式被模块覆盖
+:global(.ant-layout-header) {
+  line-height: normal;
+}

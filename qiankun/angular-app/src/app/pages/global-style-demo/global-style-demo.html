@@ -1,0 +1,117 @@
+<div class="app-page">
+  <div class="app-section">
+    <div class="app-section__title">
+      <mat-icon>palette</mat-icon>
+      全局样式测试
+    </div>
+    <div class="app-section__desc">
+      本页元素主要受 <code>styles/_global-selectors.scss</code> 中的<strong>元素选择器</strong>影响
+      （该文件经 styles.scss 的 @import 引入）
+    </div>
+
+    <div class="app-tip">
+      <mat-icon>warning</mat-icon>
+      <span>
+        <strong>这是本示例最重要的测试页。</strong>以下全局选择器写得很"有侵略性"：
+        接入 qiankun 后到宿主页面（主应用）观察 ——
+        如果 body 背景 / h1 颜色 / a 链接色 / ::selection 都变了，说明子应用全局样式
+        泄漏到了宿主；开启 strictStyleIsolation 后这些样式会被收进 shadow root，
+        但 CDK overlay（弹窗）在 shadow root 之外，又会反过来拿不到这些样式。
+      </span>
+    </div>
+  </div>
+
+  <div class="app-grid app-grid--2">
+    <div class="app-section">
+      <div class="app-section__title">
+        <mat-icon>text_fields</mat-icon>
+        元素选择器（h1 / h2 / p / a / button / input）
+      </div>
+      <div class="app-global-card">
+        <h1>{{ sectionTitle }} — H1（color: $brand-primary，来自全局样式）</h1>
+        <h2>H2 标题 —— 也是全局 h2 规则</h2>
+        <h3>H3 标题 —— 全局 h3 规则</h3>
+        <p>这是一段 <code>p</code> 元素文本，行高与颜色由全局选择器控制。</p>
+        <p>
+          访问链接：
+          <a href="https://qiankun.umijs.org/" target="_blank" rel="noopener">
+            qiankun 官方文档（a 标签颜色来自全局规则）
+          </a>
+        </p>
+        <div class="raw-controls">
+          <button>原生按钮（受全局 button 规则影响）</button>
+          <input placeholder="原生输入框" value="原生 input" />
+          <select>
+            <option>原生 select A</option>
+            <option>原生 select B</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-section">
+      <div class="app-section__title">
+        <mat-icon>category</mat-icon>
+        全局工具类 & 属性选择器
+      </div>
+      <div class="app-global-card">
+        <div class="util-row">
+          <span class="app-global-badge">默认徽标</span>
+          <span class="app-global-badge app-global-badge--ok">成功徽标</span>
+          <span class="app-global-badge app-global-badge--warn">警告徽标</span>
+          <span class="app-global-badge app-global-badge--danger">危险徽标</span>
+        </div>
+        <div class="util-row">
+          <span data-global-marker style="padding: 6px 12px">
+            属性选择器 [data-global-marker]（左侧 accent 色边框）
+          </span>
+        </div>
+        <p class="app-global-muted">以下为 .app-global-scroll（自定义滚动条样式）容器：</p>
+        <div class="app-global-scroll">
+          @for (i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track i) {
+            <p>滚动条测试行 {{ i }} —— 滚动条颜色 / 轨道 / 圆角由全局样式定义。</p>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-section">
+    <div class="app-section__title">
+      <mat-icon>rule</mat-icon>
+      如何判定隔离结果
+    </div>
+    <mat-card class="app-global-card">
+      <table class="check-table">
+        <thead>
+          <tr>
+            <th>检查项</th>
+            <th>默认模式（样式注入 document）</th>
+            <th>strictStyleIsolation（shadow DOM）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>body 背景 / h1 / a / ::selection</td>
+            <td>可能污染宿主页面 → 观察主应用是否"变样"</td>
+            <td>收进 shadow root → 对宿主无影响</td>
+          </tr>
+          <tr>
+            <td>Material 弹窗（CDK overlay）</td>
+            <td>正常（主题样式全局生效）</td>
+            <td>弹窗在 shadow root 外 → <strong>样式丢失 / 裸奔</strong></td>
+          </tr>
+          <tr>
+            <td>外部字体（@import url() 构建期内联为 @font-face）</td>
+            <td>字体文件（fonts.gstatic.com）运行时正常加载</td>
+            <td>需验证 shadow root 内字体规则与跨域字体加载行为</td>
+          </tr>
+          <tr>
+            <td>规避方案</td>
+            <td colspan="2">「弹窗演示」页可将 overlay 挂到 app-root 内部（含 shadow 穿透），让弹窗继承作用域样式</td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card>
+  </div>
+</div>

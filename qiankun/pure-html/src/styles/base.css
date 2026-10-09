@@ -1,0 +1,88 @@
+/*
+ * ============================================================
+ * base.css —— 全局样式选择器（qiankun 样式污染测试区）
+ * ============================================================
+ *
+ * ⚠️ 重要：下面这些选择器全部是「全局」的。
+ * 在 qiankun 未开启样式隔离（或仅 scoped 隔离）的情况下，
+ * 这些规则会直接作用于主应用页面，造成样式污染——
+ * 这正是 pure-html 子应用接入 qiankun 时最典型的坑之一。
+ *
+ * 测试方法：
+ * 1. 本应用独立运行时，一切正常；
+ * 2. 接入主应用后，观察主应用页面字体/间距/按钮是否被改写；
+ * 3. 主应用开启 strictStyleIsolation（shadow DOM）后，污染应消失。
+ *
+ * 生产环境对策（任选）：
+ * - 子应用样式全部带上自己的前缀命名空间（如 .pha-）
+ * - 主应用开启 strictStyleIsolation
+ * - 自定义插件把全局选择器改写为限定在子应用根容器内
+ */
+
+/* 全局变量（:root 上的 CSS 变量同样会进入主应用作用域） */
+:root {
+  --pha-brand: #1d68f0;
+  --pha-bg: #f5f6fa;
+  --pha-radius: 10px;
+}
+
+/* 全局盒模型 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 全局文档样式 */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  background: var(--pha-bg);
+  color: #1e293b;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 全局链接 */
+a {
+  color: var(--pha-brand);
+  text-decoration: none;
+}
+
+/* 全局表单控件 */
+button {
+  font: inherit;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+/* 全局标题/段落边距重置 */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol,
+figure {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+}

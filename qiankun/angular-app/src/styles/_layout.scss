@@ -1,0 +1,66 @@
+// ============================================================
+// 跨页面共享的布局工具类（全局，经 styles.scss @import）
+// ============================================================
+
+.app-page {
+  padding: $spacing-lg;
+  max-width: $content-max-width;
+  margin: 0 auto;
+}
+
+.app-section {
+  margin-bottom: $spacing-lg;
+}
+
+.app-section__title {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-size: 17px;
+  font-weight: 600;
+  color: #263238;
+  margin-bottom: $spacing-md;
+}
+
+.app-section__desc {
+  color: #6b7280;
+  font-size: 13px;
+  margin: -4px 0 $spacing-md;
+}
+
+.app-grid {
+  display: grid;
+  gap: $spacing-md;
+}
+
+.app-grid--4 { grid-template-columns: repeat(4, 1fr); }
+.app-grid--3 { grid-template-columns: repeat(3, 1fr); }
+.app-grid--2 { grid-template-columns: repeat(2, 1fr); }
+
+@media (max-width: 960px) {
+  .app-grid--4 { grid-template-columns: repeat(2, 1fr); }
+  .app-grid--3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .app-grid--4, .app-grid--3, .app-grid--2 { grid-template-columns: 1fr; }
+}
+
+.app-tip {
+  display: flex;
+  gap: $spacing-sm;
+  align-items: flex-start;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-sm;
+  font-size: 13px;
+  line-height: 1.6;
+  background: #e8eaf6;
+  color: #283593;
+
+  mat-icon {
+    flex: none;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+  }
+}

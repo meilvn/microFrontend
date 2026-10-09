@@ -1,0 +1,80 @@
+// ============================================================
+// 全局选择器演示 —— 故意写得"有侵略性"
+//
+// 用途：测试 qiankun 的样式隔离行为。
+//   - 默认模式（子应用样式整体注入 document）：下面这些元素选择器
+//     会作用到宿主页面，与主应用同名选择器冲突即产生"样式泄漏"。
+//   - strictStyleIsolation（shadow DOM）：规则被收进影子根内，
+//     但 CDK overlay（弹窗等）默认渲染在 document.body 上，
+//     反而拿不到这些样式 —— 弹窗"丢失样式"就是经典边界问题。
+//
+// 本文件包含：元素选择器 / 属性选择器 / 伪类 / 全局工具类。
+// ============================================================
+
+// ---------- 元素选择器（最容易泄漏的一类） ----------
+body {
+  margin: 0;
+  background-color: #f4f6fb;
+  font-family: $font-family-base;
+}
+
+h1, h2, h3, h4, h5 {
+  margin: 0 0 8px;
+  color: $brand-primary;
+}
+
+h1 { font-size: 24px; }
+h2 { font-size: 20px; }
+h3 { font-size: 17px; }
+h4 { font-size: 15px; }
+
+a {
+  color: $brand-primary;
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+}
+
+p { line-height: 1.6; }
+
+// 元素选择器 + 少量属性，观察对宿主页面的波及
+button { cursor: pointer; font-family: inherit; }
+input, select, textarea { font-family: inherit; }
+img { max-width: 100%; }
+
+// 伪类 / 伪元素
+::selection { background: #c5cae9; color: #1a237e; }
+
+// ---------- 属性选择器 ----------
+[data-global-marker] {
+  border-left: 4px solid $brand-accent;
+}
+
+// ---------- 全局工具类（前缀 app-global-*，供各页面使用） ----------
+.app-global-card {
+  @include card-surface();
+}
+
+.app-global-badge {
+  @include status-chip(#e8eaf6, #3f51b5);
+}
+.app-global-badge--ok     { @include status-chip(#e8f5e9, #2e7d32); }
+.app-global-badge--warn   { @include status-chip(#fff3e0, #e65100); }
+.app-global-badge--danger { @include status-chip(#fdecea, #c62828); }
+
+.app-global-muted  { color: #6b7280; }
+.app-global-accent { color: $brand-accent; }
+
+.app-global-scroll {
+  max-height: 180px;
+  overflow: auto;
+
+  &::-webkit-scrollbar { width: 8px; }
+  &::-webkit-scrollbar-track { background: #eceff1; border-radius: 4px; }
+  &::-webkit-scrollbar-thumb { background: #b0bec5; border-radius: 4px; }
+  &::-webkit-scrollbar-thumb:hover { background: #90a4ae; }
+}
+
+// ---------- 媒体查询 ----------
+@media (max-width: 720px) {
+  .app-global-card { padding: $spacing-sm; }
+}

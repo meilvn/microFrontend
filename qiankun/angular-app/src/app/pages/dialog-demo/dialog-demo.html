@@ -1,0 +1,93 @@
+<div class="app-page">
+  <div class="app-section">
+    <div class="app-section__title">
+      <mat-icon>open_in_new</mat-icon>
+      弹窗演示
+    </div>
+    <div class="app-section__desc">
+      覆盖 Material 弹窗的常见形态（提示 / 确认 / 表单 / 长内容 / 嵌套），
+      用于测试 qiankun 下 CDK Overlay 的样式与位置表现
+    </div>
+
+    <div class="app-tip">
+      <mat-icon>warning</mat-icon>
+      <span>
+        关键边界：Material 弹窗由 CDK Overlay 渲染在
+        <code>.cdk-overlay-container</code> 中，<strong>默认挂在 document.body</strong>。
+        开启 strictStyleIsolation（shadow DOM）后，弹窗在影子根之外，拿不到子应用的
+        Material 主题样式 —— 表现为弹窗"裸奔 / 样式错乱"。可切换下方挂载模式对比验证。
+      </span>
+    </div>
+  </div>
+
+  <div class="app-section">
+    <div class="app-section__title">
+      <mat-icon>smart_button</mat-icon>
+      弹窗类型
+    </div>
+    <div class="app-grid app-grid--3">
+      <mat-card class="app-global-card demo-card">
+        <h3>基础提示</h3>
+        <p class="app-global-muted">最简单的一类弹窗，点击即开。</p>
+        <button mat-raised-button color="primary" (click)="openAlert()">打开提示</button>
+      </mat-card>
+
+      <mat-card class="app-global-card demo-card">
+        <h3>确认弹窗</h3>
+        <p class="app-global-muted">结果回传：true / false。</p>
+        <button mat-raised-button (click)="openConfirm()">打开确认</button>
+      </mat-card>
+
+      <mat-card class="app-global-card demo-card">
+        <h3>表单弹窗</h3>
+        <p class="app-global-muted">输入数据并回传表单结果。</p>
+        <button mat-raised-button color="accent" (click)="openForm()">打开表单</button>
+      </mat-card>
+
+      <mat-card class="app-global-card demo-card">
+        <h3>长内容弹窗</h3>
+        <p class="app-global-muted">24 段文本，验证滚动与高度。</p>
+        <button mat-raised-button (click)="openLong()">打开长内容</button>
+      </mat-card>
+
+      <mat-card class="app-global-card demo-card">
+        <h3>嵌套弹窗</h3>
+        <p class="app-global-muted">弹窗里再开弹窗，验证多层 overlay。</p>
+        <button mat-stroked-button (click)="openNested()">打开嵌套</button>
+      </mat-card>
+
+      <mat-card class="app-global-card demo-card">
+        <h3>子弹窗直开</h3>
+        <p class="app-global-muted">直接打开第二层弹窗，观察层级。</p>
+        <button mat-stroked-button (click)="openChild()">打开子弹窗</button>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="app-section">
+    <div class="app-section__title">
+      <mat-icon>tune</mat-icon>
+      Overlay 挂载模式（qiankun 边界测试专用）
+    </div>
+    <mat-card class="app-global-card">
+      <p class="app-global-muted">{{ overlayParentInfo() }}</p>
+      <div class="mode-row">
+        <mat-checkbox [checked]="overlayInside" (change)="toggleOverlayMode()">
+          挂到 app-root 内部（含 shadow root 穿透），而不是 document.body
+        </mat-checkbox>
+        <span class="app-global-badge" [class.app-global-badge--ok]="overlayInside">
+          {{ overlayInside ? '内部模式' : '默认模式(body)' }}
+        </span>
+      </div>
+      <p class="app-global-muted" style="margin-top: 12px; font-size: 12px">
+        切换后需刷新页面生效；实现见 services/app-overlay-container.ts，主应用集成时可据此对比两种模式。
+      </p>
+      @if (lastResult) {
+        <div class="last-result">
+          <mat-icon>fact_check</mat-icon>
+          <span>{{ lastResult }}</span>
+        </div>
+      }
+    </mat-card>
+  </div>
+</div>
