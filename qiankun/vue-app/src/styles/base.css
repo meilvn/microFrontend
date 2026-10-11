@@ -29,12 +29,13 @@ html,
 body,
 #app {
   height: 100%;
+  background-color: aqua;
 }
 
 body {
   margin: 0;
   font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
-  background: var(--va-color-bg);
+  /* background: var(--va-color-bg); */
   color: var(--va-color-text);
   -webkit-font-smoothing: antialiased;
 }

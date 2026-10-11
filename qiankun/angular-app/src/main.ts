@@ -21,5 +21,46 @@ import { App } from './app/app';
  *    qiankun 模式使用 dev server 的入口 HTML，两者互不影响。
  * ──────────────────────────────────────────────────────────────
  */
-bootstrapApplication(App, appConfig)
-  .catch((err) => console.error(err));
+
+
+// qiankun 通过 window['angular-app'] 获取生命周期
+declare global {
+  interface Window {
+    'angular-app': {
+      bootstrap: () => Promise<void>;
+      mount: (props?: any) => Promise<void>;
+      unmount: () => Promise<void>;
+    };
+  }
+}
+
+let app: any = null;
+
+// 导出 qiankun 生命周期
+export async function bootstrap() {
+  console.log('[Angular22] bootstrap');
+}
+
+export async function mount(props: any) {
+  console.log('[Angular22] mount', props);
+  app = await bootstrapApplication(App, appConfig);
+  return app;
+}
+
+export async function unmount() {
+  console.log('[Angular22] unmount');
+  if (app) {
+    app.destroy();
+    app = null;
+  }
+}
+
+// qiankun 挂载点：将生命周期挂到 window 上
+(window as any)['angular-app'] = { bootstrap, mount, unmount };
+
+// 独立运行时的降级处理
+if (!window.__POWERED_BY_QIANKUN__) {
+  // 独立开发模式：publicPath 回退到默认值
+  (__webpack_public_path__ as any) = window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__ ?? '/';
+  bootstrapApplication(App, appConfig).catch(err => console.error(err));
+}
