@@ -21,6 +21,7 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "baseHref": "/angular-app/",
             "customWebpackConfig": {
               "path": "./webpack.config.js",
               "replaceDuplicatePlugins": true
@@ -28,13 +29,40 @@
             "outputPath": "dist/angular-app",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "tsConfig": "tsconfig.app.json"
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets"
+              }
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
+            "inlineStyleLanguage": "scss",
+            "budgets": [
+              {
+                "type": "initial",
+                "maximumWarning": "2MB",
+                "maximumError": "3MB"
+              },
+              {
+                "type": "anyComponentStyle",
+                "maximumWarning": "4kB",
+                "maximumError": "8kB"
+              }
+            ]
           }
         },
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "buildTarget": "angular-app:build"
+            "port": 8004,
+            "buildTarget": "angular-app:build",
+            "headers": {
+              "Access-Control-Allow-Origin": "*"
+            }
           }
         },
         "test": {

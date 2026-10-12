@@ -1,4 +1,6 @@
-import { bootstrapApplication } from '@angular/platform-browser';
+import { bootstrapApplication, createApplication } from '@angular/platform-browser';
+import { ApplicationRef, createComponent } from '@angular/core';
+import { Router } from '@angular/router';
 import { appConfig } from './app/app.config';
 import { App } from './app/app';
 
@@ -34,33 +36,72 @@ declare global {
   }
 }
 
-let app: any = null;
+let app: ApplicationRef | null = null;
 
 // 导出 qiankun 生命周期
 export async function bootstrap() {
   console.log('[Angular22] bootstrap');
 }
 
+/**
+ * 定位 qiankun 容器内的根元素（<app-root>）。
+ * strictStyleIsolation 下，子应用入口模板被 qiankun 渲染进容器的 shadowRoot；
+ * Angular 的 bootstrapApplication 通过 document.querySelector 找根元素，
+ * 无法穿透 shadow DOM，会报 NG05104。所以这里显式从容器内查找 host，
+ * 再用 createComponent(hostElement) 挂载，绕开 document 查询。
+ */
+function findHost(container: HTMLElement | undefined): HTMLElement {
+  const root = (container?.shadowRoot ?? container) as ParentNode | undefined;
+  const existing = root?.querySelector('app-root') as HTMLElement | undefined;
+  if (existing) {
+    return existing;
+  }
+  const host = document.createElement('app-root');
+  (container ?? document.body).appendChild(host);
+  return host;
+}
+
 export async function mount(props: any) {
   console.log('[Angular22] mount', props);
-  app = await bootstrapApplication(App, appConfig);
+  const container = props?.container as HTMLElement | undefined;
+  const host = findHost(container);
+  const appRef = await createApplication(appConfig);
+  const rootComponent = createComponent(App, {
+    hostElement: host,
+    environmentInjector: appRef.injector,
+  });
+  appRef.attachView(rootComponent.hostView);
+  // 手动 attachView 不会触发 APP_BOOTSTRAP_LISTENER，路由器初始导航不会自动执行
+  // （表现为：URL hash 变了但没有任何懒加载 chunk，菜单"点了没反应"）。
+  // 这里显式触发一次初始导航，之后 Angular 才会接管 hashchange。
+  const router = appRef.injector.get(Router);
+  await router.initialNavigation();
+  app = appRef;
   return app;
 }
 
-export async function unmount() {
+export async function unmount(props?: any) {
   console.log('[Angular22] unmount');
   if (app) {
     app.destroy();
     app = null;
   }
+  // 清理容器内残留的根元素，避免二次挂载时重复挂载
+  const container = props?.container as HTMLElement | undefined;
+  const root = (container?.shadowRoot ?? container) as ParentNode | undefined;
+  root?.querySelector('app-root')?.remove();
 }
 
 // qiankun 挂载点：将生命周期挂到 window 上
 (window as any)['angular-app'] = { bootstrap, mount, unmount };
 
 // 独立运行时的降级处理
-if (!window.__POWERED_BY_QIANKUN__) {
-  // 独立开发模式：publicPath 回退到默认值
-  (__webpack_public_path__ as any) = window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__ ?? '/';
+if (window.__POWERED_BY_QIANKUN__) {
+  __webpack_public_path__ = window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__ ?? '/';
+} else {
+  // 独立开发模式：publicPath 与 <base href> 对齐（当前为 /angular-app/）。
+  // 若写死 '/'，懒加载 chunk 会请求 http://host/common.js（资源根路径），
+  // 而 dev server 只把应用挂在 /angular-app/ 下 → 404 ChunkLoadError。
+  __webpack_public_path__ = document.querySelector('base')?.getAttribute('href') ?? '/';
   bootstrapApplication(App, appConfig).catch(err => console.error(err));
 }
