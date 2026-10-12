@@ -46,6 +46,10 @@ export class App {
     { path: '/lazy', label: '懒加载模块', icon: 'inbox' },
   ];
 
+  public handleClickNavItem(item: NavItem): void {
+    console.log('点击了导航项：', item.path);
+  }
+
   /** 供 [@routeAnim] 绑定：根据当前路由 data.animation 触发过渡 */
   protected getRouteState(outlet: RouterOutlet): string {
     return outlet.activatedRouteData?.['animation'] ?? '';

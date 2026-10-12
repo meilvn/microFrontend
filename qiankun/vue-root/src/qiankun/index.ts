@@ -60,7 +60,7 @@ export const subAppList: SubAppMeta[] = [
   {
     title: "Angular 子应用",
     name: "angular-app",
-    entry: "//localhost:8003/angular-app/",
+    entry: "//localhost:8004/angular-app/",
     path: "/angular-app",
     stack: "Angular",
     remark: "cd qiankun/angular-app && npm start  (port 8003)",
@@ -100,11 +100,11 @@ export async function mountSubApp(meta: SubAppMeta): Promise<void> {
       entry: meta.entry,
       container: "#subapp-viewport",
     },
-    {
-      sandbox: {
-        strictStyleIsolation: true,
-      },
-    },
+    // {
+    //   sandbox: {
+    //     strictStyleIsolation: true,
+    //   },
+    // },
   );
   currentName = meta.name;
 

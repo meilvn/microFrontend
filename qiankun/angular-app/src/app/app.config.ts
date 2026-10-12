@@ -6,9 +6,14 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 
 import { routes } from './app.routes';
 import { AppOverlayContainer } from './services/app-overlay-container';
+import { APP_BASE_HREF } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    {
+      provide: APP_BASE_HREF,
+      useValue: '/angular-app/'
+    },
     provideBrowserGlobalErrorListeners(),
     // hash 路由：qiankun 手动 loadMicroApp 模式下，子应用内部路由若走 history 模式，
     // 其 pushState 会改变 pathname，被主应用 vue-router 监听到并抢走（子路由无匹配 → 回首页）；
