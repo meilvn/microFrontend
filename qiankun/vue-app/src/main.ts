@@ -1,15 +1,15 @@
-import { createApp } from 'vue'
-import './style.css'
-import App from './App.vue'
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-import GlobalSelector from './components/GlobalSelector.vue'
-import router from './router'
+import { createApp } from "vue";
+import "./style.css";
+import App from "./App.vue";
+import ElementPlus from "element-plus";
+import "element-plus/theme-chalk/src/index.scss";
+import GlobalSelector from "./components/GlobalSelector.vue";
+import router from "./router";
 import {
   renderWithQiankun,
   qiankunWindow,
-} from 'vite-plugin-qiankun/dist/helper'
-import type { QiankunProps } from 'vite-plugin-qiankun/dist/helper'
+} from "vite-plugin-qiankun/dist/helper";
+import type { QiankunProps } from "vite-plugin-qiankun/dist/helper";
 
 // ---------------------------------------------------------------------------
 // qiankun 接入说明（主应用侧注册由你自己完成，本文件只保留标准 Vite 挂载）
@@ -29,40 +29,40 @@ import type { QiankunProps } from 'vite-plugin-qiankun/dist/helper'
 let app: any = null;
 
 function render(container?: Element | string) {
-  app = createApp(App)
-  app.use(ElementPlus)
-  app.use(router)
-  app.component('GlobalSelector', GlobalSelector)
+  app = createApp(App);
+  app.use(ElementPlus);
+  app.use(router);
+  app.component("GlobalSelector", GlobalSelector);
   // 如果主应用传了 container，挂载到对应节点；否则挂载到独立的 #app
   const mountNode = container
-    ? typeof container === 'string'
+    ? typeof container === "string"
       ? container
-      : container.querySelector('#app') || container
-    : '#app'
-  app.mount(mountNode)
+      : container.querySelector("#app") || container
+    : "#app";
+  app.mount(mountNode);
 }
 
-renderWithQiankun({  // 为子应用导出 bootstrap、mount、unmount 等生命周期
+renderWithQiankun({
+  // 为子应用导出 bootstrap、mount、unmount 等生命周期
   bootstrap() {
-    console.log('[sub-app] bootstrap')
+    console.log("[sub-app] bootstrap");
   },
   mount(props: QiankunProps) {
-    console.log('[sub-app] mount', props)
-    render(props.container)
+    console.log("[sub-app] mount", props);
+    render(props.container);
   },
   unmount() {
-    console.log('[sub-app] unmount')
-    app?.unmount()
-    app = null
+    console.log("[sub-app] unmount");
+    app?.unmount();
+    app = null;
   },
   update(props: QiankunProps) {
-    console.log('[sub-app] update', props)
+    console.log("[sub-app] update", props);
   },
-})
-
+});
 
 // 判断当前是否运行在 qiankun 环境中
 if (!qiankunWindow.__POWERED_BY_QIANKUN__) {
   // 独立运行时的正常挂载
-  render()
+  render();
 }
