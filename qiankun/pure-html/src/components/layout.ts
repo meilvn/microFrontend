@@ -9,6 +9,8 @@ export interface LayoutHandle {
   view: HTMLElement;
   /** 路由变化时统一回写菜单高亮与面包屑（由 Router 驱动） */
   setActive: (path: string) => void;
+  /** P0-① 主应用全局状态变化时同步顶栏用户名 */
+  setUserName: (name: string) => void;
   cleanup: Cleanup;
 }
 
@@ -89,9 +91,12 @@ export function renderLayout(container: HTMLElement, options: LayoutOptions): La
   clock.textContent = new Date().toLocaleTimeString('zh-CN', { hour12: false });
 
   const user = el('div', { class: 'topbar-user' }, [
-    el('span', { class: 'topbar-avatar' }, ['运']),
-    el('span', {}, [options.userName ?? '运营同学']),
+    el('span', { class: 'topbar-avatar' }, [(options.userName ?? '运').slice(0, 1)]),
+    el('span', { class: 'topbar-user-name' }, [options.userName ?? '运营同学']),
   ]);
+
+  const userNameSpan = user.querySelector('.topbar-user-name') as HTMLSpanElement;
+  const avatarSpan = user.querySelector('.topbar-avatar') as HTMLSpanElement;
 
   topbar.append(collapseBtn, breadcrumb, el('div', { class: 'topbar-right' }, [clock, user]));
 
@@ -115,6 +120,11 @@ export function renderLayout(container: HTMLElement, options: LayoutOptions): La
     setActive: (path: string) => {
       menuItems.forEach((m) => m.classList.toggle('is-active', m.dataset.path === path));
       breadcrumbCurrent.textContent = MENUS.find((m) => m.path === path)?.label ?? '';
+    },
+    setUserName: (name: string) => {
+      const display = name || '运营同学';
+      userNameSpan.textContent = display;
+      avatarSpan.textContent = display.slice(0, 1);
     },
     cleanup: () => {
       collapseClickOff();

@@ -129,7 +129,7 @@ function handleSubmit(payload: DeviceFormPayload): void {
 async function handleDelete(row: Device): Promise<void> {
   try {
     await ElMessageBox.confirm(
-      h("div", [
+      h("div", null, [
         h(
           "span",
           `确定删除设备「${row.name}」（${row.code}）吗？删除后不可恢复。`,
@@ -144,7 +144,7 @@ async function handleDelete(row: Device): Promise<void> {
         type: "warning",
         confirmButtonText: "删除",
         cancelButtonText: "取消",
-        appendTo: document.getElementsByClassName('vue-sub-app')[0],
+        appendTo: document.getElementsByClassName('vue-sub-app')[0] as HTMLElement | undefined,
       },
     );
     store.removeDevice(row.id);
@@ -168,7 +168,7 @@ async function handleBatchDelete(): Promise<void> {
         type: "warning",
         confirmButtonText: "删除",
         cancelButtonText: "取消",
-        appendTo: document.getElementsByClassName('vue-sub-app')[0],
+        appendTo: document.getElementsByClassName('vue-sub-app')[0] as HTMLElement | undefined,
       },
     );
     store.batchRemove(selectedRows.value.map((item) => item.id));

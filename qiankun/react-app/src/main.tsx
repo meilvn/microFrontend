@@ -3,6 +3,7 @@ import { App as AntdApp, ConfigProvider } from "antd";
 import zhCN from "antd/locale/zh_CN";
 import App from "./App";
 import "./globalEnv";
+import { bindMainAppProps } from "./globalProps";
 import "@/styles/global.scss";
 import {
   renderWithQiankun,
@@ -49,6 +50,8 @@ renderWithQiankun({
   },
   mount(props: QiankunProps) {
     console.log("[sub-app] mount", props);
+    // P0-① 绑定主应用透传的全局状态（userInfo / token / theme / actions）
+    bindMainAppProps(props as unknown as Record<string, unknown>);
     render(props.container);
   },
   unmount() {

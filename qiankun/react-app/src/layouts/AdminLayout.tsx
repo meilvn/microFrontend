@@ -24,6 +24,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import GlobalSearch from '@/components/GlobalSearch'
 import { useNow } from '@/hooks/useNow'
+import { useGlobalState } from '@/globalProps'
 import logo from '@/assets/logo.svg'
 import styles from './AdminLayout.module.scss'
 
@@ -60,6 +61,10 @@ export default function AdminLayout() {
   const location = useLocation()
   const { message } = App.useApp()
   const now = useNow()
+
+  // P0-① 主应用透传的全局用户（模拟登录后实时同步）
+  const global = useGlobalState()
+  const displayName = global.userInfo?.name ?? '管理员'
 
   const [collapsed, setCollapsed] = useState(false)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
@@ -150,7 +155,7 @@ export default function AdminLayout() {
             <Dropdown menu={{ items: USER_MENU_ITEMS, onClick: handleUserMenu }} placement="bottomRight">
               <Space className={styles.user}>
                 <Avatar size="small" style={{ backgroundColor: '#1677ff' }} icon={<UserOutlined />} />
-                <span>管理员</span>
+                <span>{displayName}</span>
               </Space>
             </Dropdown>
           </Space>

@@ -1,8 +1,19 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { subAppList } from '../qiankun'
+import { subscribeGlobalState, mockLogin, mockLogout } from '../qiankun/actions'
 
 const router = useRouter()
+
+/* P0-① 全局状态演示：模拟登录/退出，观察子应用顶栏同步 */
+const user = ref<{ name: string; avatar?: string } | null>(null)
+const token = ref('')
+subscribeGlobalState((state) => {
+  const s = state as { userInfo?: { name: string; avatar?: string } | null; token?: string }
+  user.value = s.userInfo ?? null
+  token.value = s.token ?? ''
+})
 </script>
 
 <template>
@@ -14,6 +25,21 @@ const router = useRouter()
         这是一个由 <b>Vite + Vue 3 + Element Plus + Tailwind CSS v4</b> 搭建的主应用，
         自身拥有独立路由（首页 / 关于），并通过 qiankun 加载多个技术栈不同的子应用。
         点击下方按钮或左侧菜单即可切换。
+      </p>
+    </div>
+
+    <!-- P0-① 全局状态演示（initGlobalState + props 透传闭环） -->
+    <div class="vr-card">
+      <h3 class="text-base mb-2">🌐 全局状态（initGlobalState）</h3>
+      <p class="text-sm text-slate-600 mb-3">
+        当前用户：<b>{{ user?.name ?? '未登录' }}</b>
+        <span v-if="token" class="text-xs text-slate-400 ml-2">token: {{ token.slice(0, 16) }}…</span>
+      </p>
+      <el-button v-if="!user" type="primary" size="small" @click="mockLogin()">模拟登录</el-button>
+      <!-- <el-button v-else size="small" @click="mockLogout()">退出登录</el-button> -->
+      <p class="text-xs text-slate-400 mt-2">
+        登录后切换任意子应用：主应用通过 props 传入 userInfo/token/actions，
+        子应用用 onGlobalStateChange 订阅，顶栏会同步显示当前用户。
       </p>
     </div>
 

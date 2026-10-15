@@ -43,6 +43,8 @@ interface AppHandle {
   root: HTMLElement;
   layout: LayoutHandle;
   router: Router;
+  /** 全局状态订阅的取消函数（unmount 时解除，避免泄漏） */
+  offGlobalState?: () => void;
 }
 
 let handle: AppHandle | null = null;
@@ -81,10 +83,30 @@ const lifecycles = {
     /* 初始路由：从当前 hash 读取，保证主应用切换回来时子应用路由不丢失 */
     const initialPath = window.location.hash.replace(/^#/, '') || '/dashboard';
 
+    /* P0-① 主应用透传的全局用户（props.userInfo / props.actions） */
+    const mainProps = (props ?? {}) as Record<string, any>;
+    const initialUserName =
+      typeof mainProps?.userInfo?.name === 'string'
+        ? mainProps.userInfo.name
+        : '运维同学';
+
     const layout = renderLayout(root, {
       activePath: initialPath,
-      userName: '运维同学',
+      userName: initialUserName,
     });
+
+    // 订阅全局状态：主应用模拟登录/退出时，顶栏用户名实时同步
+    const offGlobalState = mainProps?.actions?.onGlobalStateChange?.(
+      (next: any) => {
+        const name = next?.userInfo?.name;
+        if (typeof name === 'string') {
+          layout.setUserName(name);
+        } else if (next && next.userInfo === null) {
+          layout.setUserName('运维同学');
+        }
+      },
+      true,
+    );
 
     const router = new Router([
       {
@@ -114,7 +136,7 @@ const lifecycles = {
     ], (path) => layout.setActive(path));
 
     router.init(layout.view, initialPath);
-    handle = { root, layout, router };
+    handle = { root, layout, router, offGlobalState };
 
     console.log('[pure-html] mounted:', {
       poweredByQiankun: Boolean((window as Window).__POWERED_BY_QIANKUN__),
@@ -129,6 +151,10 @@ const lifecycles = {
 
     /* 1. 路由：移除 hashchange 监听 + 当前页面 cleanup */
     handle.router.cleanup();
+
+    /* 1.5 全局状态订阅：解除（P0-① 防泄漏） */
+    handle.offGlobalState?.();
+    handle.offGlobalState = undefined;
 
     /* 2. 弹窗与 Toast：跳过动画立即移除 */
     modal.closeAll(true);

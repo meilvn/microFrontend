@@ -3,10 +3,14 @@ import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import logoUrl from "./assets/vue.svg";
 import { qiankunWindow } from "vite-plugin-qiankun/dist/helper";
+import { useGlobalState } from "./composables/useGlobalState";
 
 const route = useRoute();
 const activeMenu = computed(() => route.path);
 const pageTitle = computed(() => String(route.meta.title ?? "设备管理"));
+
+// P0-① 主应用透传的全局用户（模拟登录后实时同步）
+const { userInfo, token } = useGlobalState();
 
 const publicPath = ref("/sub-vue/");
 
@@ -66,7 +70,15 @@ if (qiankunWindow.__POWERED_BY_QIANKUN__) {
             <el-breadcrumb-item>子应用</el-breadcrumb-item>
             <el-breadcrumb-item>{{ pageTitle }}</el-breadcrumb-item>
           </el-breadcrumb>
-          <el-tag type="info" size="small">{{ route.path }}</el-tag>
+          <div class="flex items-center gap-2">
+            <!-- P0-① 全局用户（来自主应用 props.actions 订阅） -->
+            <el-tag v-if="userInfo" type="success" size="small" effect="light">
+              👤 {{ userInfo.name }}
+              <template v-if="token"> · {{ token.slice(0, 8) }}…</template>
+            </el-tag>
+            <el-tag v-else type="info" size="small" effect="plain">未登录</el-tag>
+            <el-tag type="info" size="small">{{ route.path }}</el-tag>
+          </div>
         </header>
         <div class="flex-1 overflow-auto p-5">
           <!-- 路由出口 + 页面切换动画（mode="out-in"，key 为完整路径保证切换触发动画） -->

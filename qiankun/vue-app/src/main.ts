@@ -5,6 +5,7 @@ import ElementPlus from "element-plus";
 import "element-plus/theme-chalk/src/index.scss";
 import GlobalSelector from "./components/GlobalSelector.vue";
 import router from "./router";
+import { bindGlobalProps } from "./composables/useGlobalState";
 import {
   renderWithQiankun,
   qiankunWindow,
@@ -49,6 +50,8 @@ renderWithQiankun({
   },
   mount(props: QiankunProps) {
     console.log("[sub-app] mount", props);
+    // P0-① 绑定主应用透传的全局状态（userInfo / token / theme / actions）
+    bindGlobalProps(props as unknown as Record<string, unknown>);
     render(props.container);
   },
   unmount() {
