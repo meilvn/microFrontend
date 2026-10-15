@@ -86,6 +86,9 @@ module.exports = {
     hot: true,
     open: false,
     historyApiFallback: true,
+    devMiddleware: {
+      publicPath: '/pure-html/',
+    }
   },
   devtool: isDev ? 'eval-source-map' : 'source-map',
 };

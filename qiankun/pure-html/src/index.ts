@@ -23,6 +23,11 @@ if (
 ) {
   // eslint-disable-next-line no-undef
   __webpack_public_path__ = (window as Window).__INJECTED_PUBLIC_PATH_BY_QIANKUN__!;
+} else {
+  /* 默认主应用（非 qiankun 运行时） */
+  // eslint-disable-next-line no-undef
+  __webpack_public_path__ = '/pure-html/';
+
 }
 
 /* ---------- 页面注册（懒加载分包，验证 qiankun 下 chunk 资源路径适配） ---------- */
@@ -106,7 +111,7 @@ const lifecycles = {
           return mod.renderTestLab(view);
         },
       },
-    ]);
+    ], (path) => layout.setActive(path));
 
     router.init(layout.view, initialPath);
     handle = { root, layout, router };
@@ -147,7 +152,7 @@ const lifecycles = {
 };
 
 /* 暴露生命周期给 qiankun（pure-html 接入规范） */
-window.pureHtmlAdmin = lifecycles;
+(window as any)['pure-html-admin'] = lifecycles;
 
 /* 独立运行模式（直接浏览器打开 / 本地调试）：立即挂载 */
 if (!(window as Window).__POWERED_BY_QIANKUN__) {

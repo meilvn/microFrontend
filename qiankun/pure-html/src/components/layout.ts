@@ -7,6 +7,8 @@ import type { Cleanup } from '../types';
 
 export interface LayoutHandle {
   view: HTMLElement;
+  /** 路由变化时统一回写菜单高亮与面包屑（由 Router 驱动） */
+  setActive: (path: string) => void;
   cleanup: Cleanup;
 }
 
@@ -45,7 +47,6 @@ export function renderLayout(container: HTMLElement, options: LayoutOptions): La
       el('span', { class: 'sidebar-menu-label' }, [menu.label]),
     ]);
     if (menu.path === options.activePath) link.classList.add('is-active');
-    menuItems.push(link);
     return link;
   });
 
@@ -54,14 +55,13 @@ export function renderLayout(container: HTMLElement, options: LayoutOptions): La
     el('span', { class: 'sidebar-footer-sub' }, ['pure-html 子应用']),
   ]);
 
+  /* 菜单项挂到导航区（map 只产出元素数组，必须显式 append） */
+  nav.append(...menuItems);
+
   sidebar.append(logo, nav, sidebarFooter);
 
-  /* 菜单点击高亮（hash 由 a[href] 天然触发路由） */
-  const menuClickOff = on(nav, 'click', (e: Event) => {
-    const target = (e.target as HTMLElement).closest<HTMLElement>('.sidebar-menu-item');
-    if (!target) return;
-    menuItems.forEach((m) => m.classList.toggle('is-active', m === target));
-  });
+  /* 菜单高亮与面包屑统一由 setActive(path) 驱动（Router 在每次 render 后调用），
+     a[href] 天然触发 hashchange，无需额外 click 委托。 */
 
   /* ---------- 顶栏 ---------- */
   const topbar = el('header', { class: 'topbar' });
@@ -73,10 +73,13 @@ export function renderLayout(container: HTMLElement, options: LayoutOptions): La
     html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h12M3 18h18"/></svg>',
   });
 
+  const breadcrumbCurrent = el('span', { class: 'topbar-title-current' }, [
+    MENUS.find((m) => m.path === options.activePath)?.label ?? '',
+  ]);
   const breadcrumb = el('div', { class: 'topbar-title' }, [
     el('span', {}, ['运维控制台']),
     el('span', { class: 'topbar-title-sep' }, ['/']),
-    el('span', { class: 'topbar-title-current' }, [MENUS.find((m) => m.path === options.activePath)?.label ?? '']),
+    breadcrumbCurrent,
   ]);
 
   const clock = el('span', { class: 'topbar-clock' }, ['--:--:--']);
@@ -109,8 +112,11 @@ export function renderLayout(container: HTMLElement, options: LayoutOptions): La
 
   return {
     view,
+    setActive: (path: string) => {
+      menuItems.forEach((m) => m.classList.toggle('is-active', m.dataset.path === path));
+      breadcrumbCurrent.textContent = MENUS.find((m) => m.path === path)?.label ?? '';
+    },
     cleanup: () => {
-      menuClickOff();
       collapseClickOff();
       window.clearInterval(clockId);
       layout.remove();

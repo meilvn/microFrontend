@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 import type { PluginOption } from "vite";
 import qiankunPlugin from "vite-plugin-qiankun";
 import postcssPrefixSelector from "postcss-prefix-selector";
-import path from 'path'
+import path from "path";
 
 // vite-plugin-qiankun 无 exports 字段且 dist 为 CJS 产物，
 // TS(nodenext) 会把默认导入解析为模块命名空间；运行时 default 实为插件函数，
@@ -27,7 +27,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
+      "@": path.resolve(__dirname, "src"),
     },
   },
   css: {
@@ -39,6 +39,9 @@ export default defineConfig({
             if (filePath && filePath.match(/node_modules/)) {
               return selector; // 不修改来自 node_modules 的样式
             }
+            if (selector.match(/^(html|body|:root|#app)/)) {
+              return prefix; // 直接返回你的前缀
+            }
             return prefixedSelector;
           },
         }),
@@ -46,9 +49,9 @@ export default defineConfig({
     },
     preprocessorOptions: {
       scss: {
-        additionalData: `@use "@/styles/element.scss" as *;`
-      }
-    }
+        additionalData: `@use "@/styles/element.scss" as *;`,
+      },
+    },
   },
   base: "/sub-vue/",
   server: {

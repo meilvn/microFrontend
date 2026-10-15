@@ -18,9 +18,12 @@ export class Router {
   private currentPath = '';
   private pageCleanup: Cleanup | null = null;
   private offHash: Cleanup | null = null;
+  /** 每次成功渲染后回调（用于驱动 layout 回写菜单高亮/面包屑） */
+  private onRouteChange?: (path: string) => void;
 
-  constructor(routes: Route[]) {
+  constructor(routes: Route[], onRouteChange?: (path: string) => void) {
     this.routes = routes;
+    this.onRouteChange = onRouteChange;
   }
 
   get current(): string {
@@ -73,6 +76,8 @@ export class Router {
       const result = route.render(this.container);
       const cleanup = result instanceof Promise ? await result : result;
       this.pageCleanup = cleanup ?? null;
+      /* 路由渲染完成，通知外部回写高亮/面包屑 */
+      this.onRouteChange?.(this.currentPath);
     } catch (err) {
       console.error('[pure-html] 页面渲染失败：', err);
       this.container.innerHTML = `<div class="p-6 text-red-600">页面渲染失败：${String(err)}</div>`;
